@@ -20,8 +20,7 @@ def relu(z: NDArray[np.floating]) -> NDArray[np.floating]:
     array-like
         Activated values
     """
-    # TODO: Implement ReLU
-    pass
+    return np.maximum(0, z)
 
 
 def relu_derivative(z: NDArray[np.floating]) -> NDArray[np.floating]:
@@ -38,8 +37,7 @@ def relu_derivative(z: NDArray[np.floating]) -> NDArray[np.floating]:
     array-like
         Gradient values
     """
-    # TODO: Implement ReLU derivative
-    pass
+    return (z > 0).astype(z.dtype)
 
 
 def tanh(z: NDArray[np.floating]) -> NDArray[np.floating]:
@@ -56,8 +54,7 @@ def tanh(z: NDArray[np.floating]) -> NDArray[np.floating]:
     array-like
         Activated values
     """
-    # TODO: Implement tanh (can use np.tanh)
-    pass
+    return np.tanh(z)
 
 
 def tanh_derivative(z: NDArray[np.floating]) -> NDArray[np.floating]:
@@ -74,8 +71,7 @@ def tanh_derivative(z: NDArray[np.floating]) -> NDArray[np.floating]:
     array-like
         Gradient values
     """
-    # TODO: Implement tanh derivative
-    pass
+    return 1 - np.tanh(z) ** 2
 
 
 def logistic(z: NDArray[np.floating]) -> NDArray[np.floating]:
@@ -92,9 +88,8 @@ def logistic(z: NDArray[np.floating]) -> NDArray[np.floating]:
     array-like
         Activated values
     """
-    # TODO: Implement sigmoid
-    # Hint: Use np.clip to avoid overflow
-    pass
+    z_clipped = np.clip(z, -500, 500)
+    return 1 / (1 + np.exp(-z_clipped))
 
 
 def logistic_derivative(z: NDArray[np.floating]) -> NDArray[np.floating]:
@@ -111,8 +106,8 @@ def logistic_derivative(z: NDArray[np.floating]) -> NDArray[np.floating]:
     array-like
         Gradient values
     """
-    # TODO: Implement sigmoid derivative
-    pass
+    sig = logistic(z)
+    return sig * (1 - sig)
 
 
 def softmax(z: NDArray[np.floating]) -> NDArray[np.floating]:
@@ -129,5 +124,6 @@ def softmax(z: NDArray[np.floating]) -> NDArray[np.floating]:
     array-like, shape (n_samples, n_classes)
         Probabilities that sum to 1 for each sample
     """
-    # TODO: Implement softmax
-    pass
+    z_shifted = z - np.max(z, axis=1, keepdims=True)
+    exp_z = np.exp(z_shifted)
+    return exp_z / np.sum(exp_z, axis=1, keepdims=True)

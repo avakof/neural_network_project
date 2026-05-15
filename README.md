@@ -1,1 +1,0 @@
-# TODO: replace with your report, follow the [instructions](neural_network_project.md)
