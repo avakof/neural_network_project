@@ -18,12 +18,19 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 from numpy.typing import NDArray
-from sklearn.datasets import load_breast_cancer, load_diabetes, load_digits, load_wine
+from sklearn.datasets import (
+    load_breast_cancer,
+    load_diabetes,
+    load_digits,
+    load_wine,
+    make_friedman1,
+)
 from sklearn.exceptions import ConvergenceWarning
 from sklearn.metrics import accuracy_score, confusion_matrix, r2_score
 from sklearn.model_selection import train_test_split
 from sklearn.neural_network import MLPClassifier, MLPRegressor
 from sklearn.preprocessing import StandardScaler
+from sklearn.utils import Bunch
 
 from slp_classifier import SimpleSLPClassifier
 from slp_regressor import SimpleSLPRegressor
@@ -31,6 +38,17 @@ from slp_regressor import SimpleSLPRegressor
 
 OUTPUT_DIR = Path("demo_outputs")
 RANDOM_STATE = 42
+
+
+def load_friedman_regression() -> Bunch:
+    """Create a standard nonlinear regression benchmark dataset."""
+    X, y = make_friedman1(
+        n_samples=400,
+        n_features=10,
+        noise=1.0,
+        random_state=RANDOM_STATE,
+    )
+    return Bunch(data=X, target=y)
 
 
 def slugify(name: str) -> str:
@@ -456,6 +474,15 @@ def main() -> None:
             dataset_loader=load_diabetes,
             hidden_layer_size=50,
             learning_rate=0.001,
+            max_iter=500,
+            batch_size=32,
+            momentum=0.9,
+        ),
+        run_regression_demo(
+            name="Friedman",
+            dataset_loader=load_friedman_regression,
+            hidden_layer_size=50,
+            learning_rate=0.005,
             max_iter=500,
             batch_size=32,
             momentum=0.9,

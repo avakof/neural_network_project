@@ -11,7 +11,14 @@ Run with: pytest tests/test_models.py -v
 
 import numpy as np
 import pytest
-from sklearn.datasets import load_digits, load_iris, make_classification, make_regression
+from sklearn.datasets import (
+    load_digits,
+    load_iris,
+    make_classification,
+    make_friedman1,
+    make_regression,
+)
+from sklearn.metrics import r2_score
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from slp_classifier import SimpleSLPClassifier
@@ -626,3 +633,40 @@ class TestIntegration:
         )
         reg.fit(X_train, y_train)
         assert reg.score(X_test, y_test) > 0.6
+
+    def test_regressor_friedman_nonlinear_dataset_r2(self):
+        """Regressor should learn a nonlinear sklearn regression benchmark."""
+        X, y = make_friedman1(
+            n_samples=400,
+            n_features=10,
+            noise=1.0,
+            random_state=42,
+        )
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, test_size=0.3, random_state=42
+        )
+
+        x_scaler = StandardScaler()
+        X_train = x_scaler.fit_transform(X_train)
+        X_test = x_scaler.transform(X_test)
+
+        y_scaler = StandardScaler()
+        y_train_scaled = y_scaler.fit_transform(y_train.reshape(-1, 1)).ravel()
+
+        reg = SimpleSLPRegressor(
+            hidden_layer_size=50,
+            activation="relu",
+            learning_rate=0.005,
+            max_iter=500,
+            batch_size=32,
+            momentum=0.9,
+            random_state=42,
+        )
+
+        reg.fit(X_train, y_train_scaled)
+        y_pred_scaled = reg.predict(X_test)
+        y_pred = y_scaler.inverse_transform(y_pred_scaled.reshape(-1, 1)).ravel()
+
+        assert y_pred.shape == y_test.shape
+        assert np.all(np.isfinite(y_pred))
+        assert r2_score(y_test, y_pred) > 0.80
