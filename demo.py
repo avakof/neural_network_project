@@ -346,6 +346,7 @@ def run_regression_demo(
     name: str,
     dataset_loader: Callable,
     hidden_layer_size: int,
+    activation: str,
     learning_rate: float,
     max_iter: int,
     batch_size: int,
@@ -371,7 +372,7 @@ def run_regression_demo(
 
     custom_model = SimpleSLPRegressor(
         hidden_layer_size=hidden_layer_size,
-        activation="relu",
+        activation=activation,
         learning_rate=learning_rate,
         max_iter=max_iter,
         batch_size=batch_size,
@@ -387,7 +388,7 @@ def run_regression_demo(
 
     sklearn_model = MLPRegressor(
         hidden_layer_sizes=(hidden_layer_size,),
-        activation="relu",
+        activation=activation,
         solver="sgd",
         learning_rate_init=learning_rate,
         max_iter=max_iter,
@@ -474,7 +475,8 @@ def main() -> None:
             dataset_loader=load_diabetes,
             hidden_layer_size=50,
             learning_rate=0.001,
-            max_iter=500,
+            max_iter=800,
+            activation="tanh",
             batch_size=32,
             momentum=0.9,
         ),
@@ -482,6 +484,7 @@ def main() -> None:
             name="Friedman",
             dataset_loader=load_friedman_regression,
             hidden_layer_size=50,
+            activation="relu",
             learning_rate=0.005,
             max_iter=500,
             batch_size=32,

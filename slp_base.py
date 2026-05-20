@@ -22,7 +22,7 @@ class BaseSLPEstimator(ABC):
 
     Contains common functionality shared between both estimators.
     """
-
+    # Stores all hyperparameters and validate them
     def __init__(
         self,
         hidden_layer_size: int | Sequence[int] = 100,
@@ -116,7 +116,7 @@ class BaseSLPEstimator(ABC):
         self.velocity_weights_: Optional[list[NDArray[np.floating]]] = None
         self.velocity_biases_: Optional[list[NDArray[np.floating]]] = None
         self.loss_curve_: list[float] = []
-
+    # returns the activation function and its derivative as a pair
     def _get_activation_function(
         self,
     ) -> Tuple[Callable[[NDArray], NDArray], Callable[[NDArray], NDArray]]:
@@ -129,7 +129,7 @@ class BaseSLPEstimator(ABC):
             return logistic, logistic_derivative
         else:
             raise ValueError(f"Unknown activation: {self.activation}")
-
+    # Creates weight martrices and bias vectors for each layer 
     def _initialize_weights(self) -> None:
         """
         Initialize weights and biases.
