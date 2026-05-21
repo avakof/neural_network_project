@@ -629,7 +629,7 @@ class TestIntegration:
 
         reg = SimpleSLPRegressor(
             hidden_layer_size=30, activation="relu",
-            learning_rate=0.01, max_iter=300, random_state=42,
+            learning_rate=0.002, max_iter=300, random_state=42,
         )
         reg.fit(X_train, y_train)
         assert reg.score(X_test, y_test) > 0.6

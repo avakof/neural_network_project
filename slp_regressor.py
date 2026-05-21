@@ -128,7 +128,7 @@ class SimpleSLPRegressor(BaseSLPEstimator):
         """
         n_samples = X.shape[0]
         _, activation_derivative = self._get_activation_function()
-        scale = 1.0 / n_samples if self.activation == "relu" else 2.0 / n_samples
+        scale = 2.0 / n_samples
         gradients_w = [np.zeros_like(weight) for weight in self.weights_]
         gradients_b = [np.zeros_like(bias) for bias in self.biases_]
 
